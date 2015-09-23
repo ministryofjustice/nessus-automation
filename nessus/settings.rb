@@ -14,8 +14,12 @@ module Nessus
       ENV.fetch('NESSUS_PASS', 'test_pass')
     end
 
+    def ssl_verify
+      'none' # ssl_verify for secure connection
+    end
+
     def refresh_interval
-      5000
+      5
     end
   end
 end

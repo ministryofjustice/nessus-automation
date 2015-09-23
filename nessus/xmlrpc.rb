@@ -1,4 +1,5 @@
 require 'net/http'
+require 'json'
 #
 #
 # Nessus XML RPC Client
@@ -284,9 +285,9 @@ module Nessus
       json   = {}
 
       req = Net::HTTP::Post.new(uri)
-      req.set_form_data(data) unless data.blank?
-      req.body = body unless body.blank?
-      req['Content-Type'] = ctype unless ctype.blank?
+      req.set_form_data(data) if data
+      req.body = body if body
+      req['Content-Type'] = ctype if ctype
       fields.each_pair do |name, value|
         req.add_field(name, value)
       end
