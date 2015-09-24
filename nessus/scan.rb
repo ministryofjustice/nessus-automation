@@ -5,33 +5,29 @@ module Nessus
   class Scan
     attr_reader :uuid, :id, :details, :result
 
-    def self.web_app(targets)
-      templates = client.list_template('scan')
-
-      #get the name => webapp template from the list
-      new(uuid, targets)
-    end    
-
-    def initialize(uuid, targets)
-      @uuid = uuid
+    def initialize(name, targets)
+      set_uuid(name)
       setup_scan(targets)
     end
 
-    def launch
+    def launch!
       client.scan_launch(@id)
 
       loop do
         raw    = client.scan_details(@id)
         status = raw['info']['status']
 
-        break if status != 'running'
+        if status != 'running'
+          @result = Result.new(raw)
+          break
+        end
           
         sleep Nessus::Settings.refresh_interval
       end
     end
 
     def view
-      client.scan_details(scan_id)
+      result && result.raw
     end
 
     def export_csv(filepath)
@@ -43,10 +39,18 @@ module Nessus
 
     private
 
+    def set_uuid(name)
+      @uuid = client
+                .list_template('scan')
+                .fetch('templates', [])
+                .find { |t| t['name'] == name }
+                .fetch('uuid')
+    end
+
     def setup_scan(targets)
       @details = client.scan_create(
         @uuid,
-        "Automated Scan #{DateTime.now}",
+        "Automated Scan #{Time.now}",
         "This scan was created by the Nessus ruby client as part of automated testing",
         targets
       )
@@ -61,6 +65,32 @@ module Nessus
         Nessus::Settings.password,
         Nessus::Settings.ssl_verify
       )
+    end
+
+    class Result
+      attr_reader :raw
+
+      def initialize(raw)
+        @raw = raw
+      end
+
+      def critical?
+        check('critical')
+      end
+
+      def high?
+        !critical? && check('high')
+      end
+
+      def medium?
+        !critical? && !high? && check('medium')
+      end
+
+      private
+
+      def check(severity)
+        raw['hosts'].any? { |h| h.fetch(severity) > 0 } 
+      end
     end
   end
 end
