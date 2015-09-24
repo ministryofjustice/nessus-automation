@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require './lib/nessus/version.rb'
 
 Gem::Specification.new do |s|
-  s.name          = 'moj-nesssus-automation'
+  s.name          = 'moj-nessus-automation'
   s.version       =  Nessus::VERSION
   s.date          = '2014-09-24'
   s.summary       = 'Nessus Automation Gem'
