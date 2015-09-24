@@ -79,11 +79,11 @@ module Nessus
       end
 
       def high?
-        !critical? && check('high')
+        check('high')
       end
 
       def medium?
-        !critical? && !high? && check('medium')
+        check('medium')
       end
 
       private
