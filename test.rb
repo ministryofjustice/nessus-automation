@@ -62,8 +62,8 @@ end
 client.scan_details(scan_id)
 
 # Export the scan
-id  = client.scan_export(13, 'csv')
+id  = client.scan_export(scan_id, 'csv')
 csv = client.report_download(scan_id, id['file'])
 
-require 'pry'; binding.pry
+
 
