@@ -3,13 +3,32 @@ require_relative './settings.rb'
 
 module Nessus
   class Scan
+    #
+    # Wrapper for XMLRPC client
+    # 
+    # @attr_reader [String] uuid of scan template
+    # @attr_reader [Fixnum] scan id
+    # @attr_reader [Hash] full scan details
+    # @attr_reader [Result] full scan result
+    #
     attr_reader :uuid, :id, :details, :result
-
+    #
+    # Create a new scan instance
+    # 
+    # @param [String] nessus scan template name
+    # @param [Array<String>] target addresses e.g http://localhost:3000
+    #
+    # @return [Scan]
+    #
     def initialize(name, targets)
       set_uuid(name)
       setup_scan(targets)
     end
-
+    #
+    # Launches the scan
+    #
+    # @return [Result] the result hash from the scan
+    # 
     def launch!
       client.scan_launch(@id)
 
@@ -25,11 +44,21 @@ module Nessus
         sleep Nessus::Settings.refresh_interval
       end
     end
-
+    #
+    # View the result of a finished scan
+    #
+    # @return [Hash] the raw result hash from the scan
+    #
     def view
       result && result.raw
     end
-
+    #
+    # Export scan to csv file
+    #
+    # @param [String] output filepath
+    #
+    # @return [Fixnum] bytes written to file
+    #
     def export_csv(filepath)
       csv_id   = client.scan_export(@id, 'csv')
       csv_data = client.report_download(@id, csv_id['file'])

@@ -2,12 +2,10 @@ require 'net/http'
 require 'json'
 require 'openssl'
 #
-#
 # Nessus XML RPC Client
 #
-# source: Metasploit Framework
-# url: https://github.com/rapid7/metasploit-framework/blob/master/lib/nessus/nessus-xmlrpc.rb
-#
+# @author Metasploit Framework
+# @see https://github.com/rapid7/metasploit-framework/blob/master/lib/nessus/nessus-xmlrpc.rb
 #
 module Nessus
   class Client
