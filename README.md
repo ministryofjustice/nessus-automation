@@ -4,11 +4,16 @@
 
 ## Dependencies
 
-None
++ docker
++ boot2docker
 
 ## Description
 
 A gem to help integrate automated security scans (using Nessus) into application feature/smoke tests
+
+## Running Locally
+
+The application is pointed to a Nessus instance via the NESSUS_HOST environment variable. For local development we have provided a simple setup script that will create and launch a dockerised Nessus instance through the setup.sh script. This will finish with a browser window prompting for login details and an activation key. This can be obtained from the [Tenable Security](https://www.tenable.com/products/nessus-home) site.
 
 ## Usage
 
@@ -27,7 +32,7 @@ Launch the scan (can take a long time depending on complexity of the target)
 
 ```ruby
 
-  scan.launch
+  scan.launch!
 
 ```
 
