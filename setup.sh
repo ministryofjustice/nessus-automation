@@ -3,8 +3,6 @@
 boot2docker start
 $(boot2docker shellinit)
 
-docker images | grep sometheycallme/docker-nessus
-
 if docker images | grep sometheycallme/docker-nessus; then 
   docker pull sometheycallme/docker-nessus
 fi
